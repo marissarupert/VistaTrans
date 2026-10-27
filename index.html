@@ -20,6 +20,32 @@
   </defs>
 </svg>
 
+<header class="menubar">
+  <button class="mb-brand" data-go="cover" aria-label="VistaTrans + Stream: back to the start">
+    <img src="assets/img/logo-vista-trans.png" alt="" height="26"><i></i><img src="assets/img/logo-stream.png" alt="" height="24">
+  </button>
+  <button class="mb-toggle" aria-label="Menu" aria-expanded="false" aria-controls="mb-items"><span></span></button>
+  <nav class="mb-items" id="mb-items" aria-label="Slides">
+    <button data-go="your-team">Your Team</button>
+    <div class="mb-group">
+      <button data-go="about-stream" aria-haspopup="true">About Stream<svg class="caret" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
+      <div class="mb-sub">
+        <button data-pop="investment-management"><i></i>Investment Management</button>
+        <button data-pop="development"><i></i>Development</button>
+      </div>
+    </div>
+    <button data-go="understanding-your-business">Understanding Your Business</button>
+    <button data-go="capital-structure">Capital Structure</button>
+    <button data-go="thank-you">Thank You</button>
+  </nav>
+  <div class="mb-tools">
+    <span class="count"></span>
+    <button class="mb-btn prev" aria-label="Previous slide"><svg viewBox="0 0 10 16"><path d="M8 1L2 8l6 7" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
+    <button class="mb-btn next" aria-label="Next slide"><svg viewBox="0 0 10 16"><path d="M2 1l6 7-6 7" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
+    <button class="mb-btn fs" aria-label="Full screen"><svg viewBox="0 0 16 16"><path d="M1 6V1h5M10 1h5v5M15 10v5h-5M6 15H1v-5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+  </div>
+</header>
+
 <main id="viewport">
 <div id="stage">
 
@@ -394,13 +420,7 @@
 </div>
 </main>
 
-<nav class="deck-nav" aria-label="Slides">
-  <div class="dots"></div>
-  <span class="count"></span>
-  <button class="nav-btn prev" aria-label="Previous slide">‹</button>
-  <button class="nav-btn next" aria-label="Next slide">›</button>
-  <button class="nav-btn fs" aria-label="Full screen">⤢</button>
-</nav>
+
 
 <script src="deck.js"></script>
 </body>

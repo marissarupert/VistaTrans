@@ -20,12 +20,19 @@ order.
 
 ## Presenting
 
+A menu bar runs across the top: the two logos (back to the cover), the
+sections (About Stream drops down to Investment Management and Development),
+the slide number, previous / next and full screen. The current slide is
+underlined in red. In full screen the bar tucks away; move the pointer to the
+top edge to bring it back. On narrow screens the sections fold into a ☰ menu.
+
 | Action | Keys / gestures |
 |---|---|
-| Next / previous slide | → ← (also ↓ ↑, Space, PageDown/PageUp), swipe, or the controls bottom right |
+| Next / previous slide | → ← (also ↓ ↑, Space, PageDown/PageUp), swipe, or ‹ › in the menu bar |
+| Jump to a section | click it in the menu bar |
 | First / last | Home / End |
-| Full screen | F, or ⤢ in the controls |
-| Open a popout | click Investment Management or Development on slide 3 |
+| Full screen | F, or the full-screen button in the menu bar |
+| Open a popout | click Investment Management or Development on slide 3, or in the About Stream menu |
 | Switch popouts | ← → or the side arrow while one is open |
 | Close a popout | Esc, ×, or click outside it |
 
@@ -54,8 +61,8 @@ writes `VistaTrans-Stream.html`, with every image and font inlined (about
   the PDF.
 - `deck.css`: layout, entrance motion, and the design layer (slide wipe,
   progress line, hover states).
-- `deck.js`: scaling, navigation, popouts, count-ups, and the Continuum of
-  Service route.
+- `deck.js`: scaling, the menu bar, navigation, popouts, count-ups, and the
+  Continuum of Service route.
 - `assets/img`: photos and logos extracted from the PDF at full resolution.
 - `assets/fonts`: Inter Tight (headings), Nunito Sans and Open Sans. These
   are open-source stand-ins for the PDF's heading face and match its body
