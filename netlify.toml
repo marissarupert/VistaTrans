@@ -1,0 +1,5 @@
+# Static site, no build step. In Netlify, set the site's base directory to
+# vista-trans so it publishes this folder (the repo root builds 357 Green).
+[build]
+  publish = "."
+  command = ""

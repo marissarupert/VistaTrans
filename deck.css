@@ -1,0 +1,353 @@
+/* VistaTrans + Stream deck. Every position is in 1920×1080 stage pixels,
+   measured from the source PDF, so the slides match it one to one. */
+
+@font-face { font-family: 'Inter Tight'; src: url(assets/fonts/inter-tight.woff2) format('woff2'); font-weight: 100 900; font-display: block; }
+@font-face { font-family: 'Nunito Sans'; src: url(assets/fonts/nunito-sans.woff2) format('woff2'); font-weight: 200 1000; font-display: block; }
+@font-face { font-family: 'Nunito Sans'; src: url(assets/fonts/nunito-sans-italic.woff2) format('woff2'); font-weight: 200 1000; font-style: italic; font-display: block; }
+@font-face { font-family: 'Open Sans'; src: url(assets/fonts/open-sans.woff2) format('woff2'); font-weight: 300 800; font-display: block; }
+
+:root {
+  --head: 'Inter Tight', 'Helvetica Neue', Arial, sans-serif;
+  --body: 'Nunito Sans', 'Helvetica Neue', Arial, sans-serif;
+  --stat: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+  --red: #ed1e24;
+  --stripe: #e11b22;
+  --charcoal: #1a1614;
+  --paper: #f5f5f5;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; background: #000; overflow: hidden; }
+body { font-family: var(--body); color: #000; -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+img { display: block; }
+
+#viewport { position: fixed; inset: 0; display: grid; place-items: center; overflow: hidden; }
+#stage {
+  position: relative; width: 1920px; height: 1080px; flex: none;
+  transform: scale(var(--scale, .5)); overflow: hidden; background: #000;
+}
+
+/* Slides ------------------------------------------------------------------ */
+
+.slide {
+  position: absolute; inset: 0; overflow: hidden; background: #fff;
+  opacity: 0; visibility: hidden; transition: opacity .6s ease, visibility 0s .6s;
+}
+.slide.current { opacity: 1; visibility: visible; transition: opacity .6s ease; z-index: 1; }
+.popout .slide { opacity: 1; visibility: visible; }
+
+.abs, .t, .poly, .rule, .hr, .logo { position: absolute; }
+.t { white-space: nowrap; }
+.poly { inset: 0; }
+.dark { background: var(--charcoal); }
+.red { background: var(--stripe); }
+.white { color: #fff; }
+.ink { color: #211c19; }
+.red-text { color: var(--red); }
+.ff-head { font-family: var(--head); font-weight: 700; letter-spacing: -.01em; }
+.ff-body { font-family: var(--body); }
+.kicker { font-size: 25px; line-height: 30px; font-weight: 700; letter-spacing: -.005em; }
+.h-80 { font-size: 80px; line-height: 95px; letter-spacing: -.002em; }
+.label-20 { font-size: 20px; line-height: 27px; font-weight: 600; color: #96918e; letter-spacing: 0; }
+.rule { height: 4px; background: #ff0000; }
+.hr { height: 1px; background: #fff; }
+
+/* Entrance motion: elements start hidden, and play when their slide (or
+   popout) gets .play. Each sets its own delay with --d. */
+.rise { opacity: 0; transform: translateY(26px); }
+.pop  { opacity: 0; transform: scale(.9); }
+.grow { transform: scaleX(0); transform-origin: left center; }
+.sweep { transform: translateX(-30%); }
+.slash { transform: translateY(100%); }
+.push { transform: scale(1.12); }
+.rise, .pop, .grow, .sweep, .slash {
+  transition: opacity .8s var(--ease), transform .9s var(--ease);
+  transition-delay: var(--d, 0s);
+}
+.play .rise, .play .pop { opacity: 1; transform: none; }
+.play .grow, .play .sweep, .play .slash { transform: none; }
+.play .sweep { transition-duration: 1.1s; }
+.play .push { transform: scale(1); transition: transform 9s cubic-bezier(.25, .6, .3, 1); }
+
+.photo-wrap { position: absolute; inset: 0; overflow: hidden; }
+.photo { position: absolute; top: 0; height: 1080px; max-width: none; transform-origin: 70% 50%; }
+
+/* 2 · Team ------------------------------------------------------------------ */
+
+.person { position: absolute; width: 287px; }
+.headshot { width: 287px; height: 359px; overflow: hidden; border-bottom: 3px solid #ee2638; }
+.headshot img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ease); }
+.person:hover .headshot img { transform: scale(1.05); }
+.person figcaption { position: absolute; top: 422px; left: 0; white-space: nowrap; }
+.person-name { display: block; font: 700 36px/49px var(--body); color: #b5b5b5; }
+.person-role { display: block; font: 400 27px/37px var(--body); color: #fff; }
+
+.gl { position: absolute; background: #d6d0ca; }
+.gl.v { width: 1px; }
+.gl.h { height: 1px; width: 855px; transform-origin: left; }
+.play .gl { animation: draw-h 1s var(--ease) .7s both; }
+.play .gl.v { animation-name: draw-v; }
+@keyframes draw-h { from { transform: scaleX(0); } }
+@keyframes draw-v { from { transform: scaleY(0); } }
+.gl.v { transform-origin: top; }
+
+.logo { height: auto; transition: opacity .8s var(--ease), transform .5s var(--ease), filter .3s; transition-delay: var(--d, 0s); }
+.play .logo:hover { transform: scale(1.08); transition-delay: 0s; }
+
+/* 3 · About Stream ------------------------------------------------------------ */
+
+.map { position: absolute; }
+.map img { width: 100%; height: 100%; }
+.pin { position: absolute; width: 0; height: 0; }
+.pin::before, .pin::after {
+  content: ''; position: absolute; left: -9px; top: -9px; width: 18px; height: 18px;
+  border-radius: 50%; border: 2px solid var(--red); opacity: 0;
+}
+.play .pin::before { animation: ping 2.8s ease-out var(--d) infinite; }
+.play .pin::after { animation: ping 2.8s ease-out calc(var(--d) + 1.4s) infinite; }
+@keyframes ping { 0% { transform: scale(.6); opacity: .9; } 100% { transform: scale(2.6); opacity: 0; } }
+
+.stat-row .stat { position: absolute; top: 928px; transform: translate(-50%, 26px); text-align: center; }
+.play .stat-row .stat { transform: translate(-50%, 0); }
+.stat b { display: block; font: 700 48px/65px var(--stat); color: var(--red); white-space: nowrap; }
+.stat span { display: block; margin-top: -7px; font: 600 19px/21px var(--stat); color: #000; white-space: nowrap; }
+
+.value { position: absolute; top: 173px; width: 120px; margin-left: -60px; text-align: center; }
+.value img { width: 65px; height: 65px; margin: 0 auto; transition: transform .4s var(--ease); }
+.value:hover img { transform: translateY(-4px) rotate(-6deg); }
+.value span { display: block; margin-top: 9px; font: 600 15px/20px var(--stat); color: #fff; }
+
+.services { list-style: none; }
+.services li { position: absolute; left: 1432px; font: 600 24px/43px var(--stat); color: #fff; white-space: nowrap; }
+.popout-link { position: relative; display: block; font: inherit; line-height: inherit; text-align: left; transition: color .25s; }
+.popout-link .hand {
+  position: absolute; left: -32px; top: 6px; width: 27px; height: 31px; overflow: visible;
+  transform-origin: 60% 80%;
+}
+.play .popout-link .hand { animation: tap 2.4s ease-in-out 2s infinite; }
+@keyframes tap { 0%, 60%, 100% { transform: none; } 70% { transform: translate(2px, 2px) scale(.92); } 80% { transform: none; } }
+.popout-link .ul {
+  position: absolute; left: 0; right: 0; bottom: 1px; height: 4px; background: #ff0000;
+  transform-origin: left; transition: transform .3s var(--ease), background .25s, height .25s;
+}
+.popout-link[data-popout="development"] .ul { left: -1px; right: 4px; }
+.popout-link[data-popout="investment-management"] .ul { right: 3px; }
+.popout-link:hover, .popout-link:focus-visible { color: #ff3b3b; outline: none; }
+.popout-link:hover .ul, .popout-link:focus-visible .ul { height: 6px; }
+.popout-link:active { transform: translateY(1px); }
+
+/* 4 · Understanding your business ------------------------------------------- */
+
+.placeholder {
+  position: absolute; left: 362px; top: 384px; width: 1172px; height: 387px; background: #e840db;
+}
+.placeholder span {
+  position: absolute; left: 99px; top: 146px; white-space: nowrap;
+  font: 400 56px/65px 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #fff;
+}
+
+/* 5 · Capital structure ------------------------------------------------------ */
+
+.card {
+  position: absolute; width: 503px; height: 164px; background: var(--red); color: #fff;
+  transition: opacity .8s var(--ease), transform .9s var(--ease), box-shadow .3s;
+  transition-delay: var(--d, 0s);
+}
+.play .card:hover { transform: translateY(-8px); box-shadow: 0 18px 36px rgba(160, 10, 15, .28); transition-delay: 0s; }
+.card-icon { position: absolute; height: auto; transition: transform .4s var(--ease); }
+.card:hover .card-icon { transform: scale(1.12); }
+.card b { position: absolute; font: 700 30px/36px var(--body); white-space: nowrap; }
+.card i { position: absolute; font: italic 400 24px/32px var(--body); white-space: nowrap; }
+
+/* 6 · Thank you -------------------------------------------------------------- */
+
+.contact { position: absolute; top: 732px; font-style: normal; color: #fff; font: 300 30px/41px var(--body); }
+.contact > * { display: block; white-space: nowrap; }
+.contact b { font-weight: 700; }
+.contact .rule { position: relative; width: 245px; margin: 8px 0 29px; }
+.contact a { color: #fff; text-decoration: none; background: linear-gradient(#ff0000, #ff0000) 0 100% / 0 2px no-repeat; transition: background-size .3s var(--ease); width: max-content; }
+.contact a:hover { background-size: 100% 2px; }
+
+/* Popout: Investment Management Services ------------------------------------ */
+
+.fund { position: absolute; top: 329px; width: 310px; height: 360px; }
+.fund-when { position: absolute; left: 21px; top: 0; font: 700 20px/27px var(--head); color: #000; white-space: nowrap; }
+.fund-when span { color: #96918e; font-weight: 600; }
+.tl-dot { position: absolute; left: -21px; top: 4px; width: 16px; height: 16px; border-radius: 50%; background: var(--red); }
+.play .tl-dot { animation: dot 1s var(--ease) calc(var(--d) + .2s) both; }
+@keyframes dot { 0% { transform: scale(0); } 60% { transform: scale(1.4); } 100% { transform: scale(1); } }
+.fund-photo { position: absolute; top: 40px; width: 310px; height: 189px; overflow: hidden; }
+.fund-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform .7s var(--ease); }
+.fund:hover .fund-photo img { transform: scale(1.08); }
+.fund-name { position: absolute; top: 249px; font: 700 19px/26px var(--stat); color: var(--red); white-space: nowrap; }
+.fund-amt { position: absolute; top: 276px; font: 700 40px/48px var(--head); letter-spacing: -.01em; white-space: nowrap; }
+.fund-note { position: absolute; top: 330px; font: 600 20px/27px var(--body); color: #8e8e8e; white-space: nowrap; }
+.tl-line { position: absolute; top: 341.5px; height: 1px; background: #707070; transform: scaleX(0); transform-origin: left; }
+.play .tl-line { transform: none; transition: transform .7s var(--ease) var(--d); }
+
+.kpi { position: absolute; color: #fff; white-space: nowrap; }
+.kpi b { display: block; font: 700 40px/48px var(--head); letter-spacing: -.01em; }
+.kpi span { display: block; margin-top: -2px; font: 600 18px/22px var(--body); color: #8e8e8e; }
+.kpi.low span { margin-top: 4px; }
+
+/* Popout: Development Services ---------------------------------------------- */
+
+.trucks { position: absolute; left: 1055px; top: 0; width: 865px; height: 1080px; overflow: hidden; }
+.trucks img { position: absolute; left: -292px; top: -1px; width: 1159px; height: 1082px; filter: grayscale(1); }
+.trucks::after { content: ''; position: absolute; inset: 0; background: rgba(0, 0, 0, .68); }
+.row-head { font: 800 22px/30px var(--body); color: #fff; }
+.dev-val { font: 700 44px/60px var(--stat); color: #fff; }
+
+.continuum { position: absolute; inset: 0; }
+.continuum svg { position: absolute; inset: 0; width: 1920px; height: 1080px; }
+.route { fill: none; stroke: #fff; stroke-width: 1.5; }
+.step {
+  position: absolute; left: 0; top: 0; width: 0; height: 0; color: #fff;
+  font: 400 20px/25px var(--body);
+}
+.step i {
+  position: absolute; left: calc(var(--x) * 1px - 14px); top: calc(var(--y) * 1px - 14px);
+  width: 28px; height: 28px; border-radius: 50%;
+  background: radial-gradient(circle, #e11b22 0 7px, rgba(225, 27, 34, .45) 8px, rgba(225, 27, 34, 0) 14px);
+  transform: scale(0); transition: transform .5s var(--ease);
+}
+.step span {
+  position: absolute; left: calc(var(--lx) * 1px); top: calc(var(--ly) * 1px);
+  transform: translateX(-50%); white-space: nowrap; text-align: center;
+  opacity: 0; transition: opacity .5s, color .25s, text-shadow .25s;
+}
+.play .step i { transform: scale(1); transition-delay: var(--sd, 0s); }
+.play .step span { opacity: 1; transition-delay: var(--sd, 0s), 0s, 0s; }
+.continuum.hovering .step span { opacity: .4; transition-delay: 0s; }
+.continuum.hovering .step.on span { opacity: 1; text-shadow: 0 0 18px rgba(225, 27, 34, .9); }
+.step.on i { transform: scale(1.6); transition-delay: 0s; }
+.step:focus-visible { outline: none; }
+.step:focus-visible span { outline: 2px solid #fff; outline-offset: 4px; }
+
+/* Popout layer ---------------------------------------------------------------- */
+
+.popout-layer { position: absolute; inset: 0; z-index: 50; }
+.popout-backdrop {
+  position: absolute; inset: 0; background: rgba(10, 8, 7, .72);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  opacity: 0; transition: opacity .45s ease;
+}
+.popout-layer.open .popout-backdrop { opacity: 1; }
+.popout {
+  position: absolute; left: 0; top: 0; width: 1920px; height: 1080px;
+  transform-origin: 0 0;
+  transform: translate(var(--tx, 960px), var(--ty, 540px)) scale(.04); opacity: 0;
+  transition: transform .55s cubic-bezier(.2, .8, .2, 1), opacity .35s ease;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, .55);
+}
+.popout-layer.open .popout { transform: translate(96px, 54px) scale(.9); opacity: 1; }
+.popout .slide { position: absolute; inset: 0; }
+.popout-close {
+  position: absolute; right: 26px; top: 20px; z-index: 5; width: 64px; height: 64px; border-radius: 50%;
+  font: 300 52px/60px var(--head); color: #fff; background: rgba(0, 0, 0, .55);
+  transition: background .2s, transform .2s;
+}
+.s-invest ~ .popout-close { color: #000; background: rgba(0, 0, 0, .06); }
+.popout-close:hover { background: var(--red); color: #fff; transform: rotate(90deg); }
+
+/* Deck chrome ------------------------------------------------------------------ */
+
+.deck-nav {
+  position: fixed; right: 16px; bottom: 14px; z-index: 100; display: flex; align-items: center; gap: 10px;
+  padding: 6px 8px 6px 14px; border-radius: 999px; background: rgba(20, 18, 17, .72);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  color: #fff; font: 600 13px/1 var(--body); opacity: 0; transition: opacity .4s;
+}
+body.show-nav .deck-nav, .deck-nav:hover, .deck-nav:focus-within { opacity: 1; }
+.dots { display: flex; gap: 6px; }
+.dots button { width: 8px; height: 8px; border-radius: 50%; background: rgba(255, 255, 255, .35); transition: background .2s, transform .2s; }
+.dots button[aria-current="true"] { background: var(--red); transform: scale(1.25); }
+.count { min-width: 36px; text-align: center; font-variant-numeric: tabular-nums; opacity: .8; }
+.nav-btn { width: 32px; height: 32px; border-radius: 50%; font-size: 22px; line-height: 30px; transition: background .2s; }
+.nav-btn:hover { background: rgba(255, 255, 255, .15); }
+.nav-btn.fs { font-size: 17px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rise, .pop, .grow, .sweep, .slash, .push, .popout, .step i, .step span, .tl-line { transition: none !important; }
+  .play .push { transform: none; }
+  .pin::before, .pin::after, .hand, .tl-dot, .gl { animation: none !important; }
+}
+
+.settled .rise, .settled .pop, .settled .card, .settled .logo { transition-delay: 0s; }
+
+/* Design layer --------------------------------------------------------------- */
+
+/* Slide change: a charcoal panel with the deck's red stripe on its leading
+   edge sweeps across at the same angle as the cover's diagonal. */
+.wipe { position: absolute; inset: 0; z-index: 40; pointer-events: none; overflow: hidden; }
+.wipe i {
+  position: absolute; top: -10%; bottom: -10%; left: -30%; width: 160%;
+  background: var(--charcoal); transform: translateX(-110%) skewX(-12deg);
+}
+.wipe i::after { content: ''; position: absolute; top: 0; bottom: 0; right: -18px; width: 18px; background: var(--stripe); }
+.wipe.back i::after { right: auto; left: -18px; }
+.wipe.go i { animation: wipe .9s cubic-bezier(.7, 0, .3, 1) both; }
+.wipe.go.back i { animation-name: wipe-back; }
+@keyframes wipe { from { transform: translateX(-110%) skewX(-12deg); } to { transform: translateX(110%) skewX(-12deg); } }
+@keyframes wipe-back { from { transform: translateX(110%) skewX(-12deg); } to { transform: translateX(-110%) skewX(-12deg); } }
+
+/* Progress along the bottom of the stage. */
+.progress { position: absolute; left: 0; bottom: 0; height: 5px; width: 100%; z-index: 30; pointer-events: none; }
+.progress b { display: block; height: 100%; width: 100%; background: var(--stripe); transform-origin: left; transform: scaleX(var(--p, 0)); transition: transform .9s var(--ease); }
+
+/* Photos drift with the pointer. */
+.photo-wrap { transform: translate(var(--px, 0), var(--py, 0)) scale(1.03); transition: transform 1.2s var(--ease); }
+
+/* Client grid cells light up on hover. */
+.cell { position: absolute; width: 428px; height: 114px; background: transparent; transition: background .3s; }
+.cell::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--stripe); transform: scaleY(0); transition: transform .3s var(--ease); }
+.cell:hover { background: #f4f1ee; }
+.cell:hover::before { transform: none; }
+.client-grid .logo { pointer-events: none; }
+
+/* Capital structure cards: a stripe sheen crosses on hover. */
+.card { overflow: hidden; }
+.card::before {
+  content: ''; position: absolute; top: -20%; bottom: -20%; left: -40%; width: 60px;
+  background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.22), rgba(255,255,255,0));
+  transform: skewX(-12deg) translateX(-200%); transition: transform 0s;
+}
+.card:hover::before { transform: skewX(-12deg) translateX(1300%); transition: transform .9s var(--ease); }
+.card::after { content: ''; position: absolute; left: 0; bottom: 0; height: 5px; width: 100%; background: var(--charcoal); transform: scaleX(0); transform-origin: left; transition: transform .45s var(--ease); }
+.card:hover::after { transform: none; }
+
+/* Funds: a red bar runs under the photo on hover. */
+.fund-photo::after { content: ''; position: absolute; left: 0; bottom: 0; height: 5px; width: 100%; background: var(--red); transform: scaleX(0); transform-origin: left; transition: transform .45s var(--ease); }
+.fund:hover .fund-photo::after { transform: none; }
+.fund:hover .tl-dot { box-shadow: 0 0 0 6px rgba(237, 30, 36, .2); }
+
+/* Popout links get a soft red halo behind the hand. */
+.popout-link .hand { filter: drop-shadow(0 0 0 rgba(255, 0, 0, 0)); }
+.popout-link::before {
+  content: ''; position: absolute; left: -36px; top: 7px; width: 30px; height: 30px; border-radius: 50%;
+  background: rgba(255, 0, 0, .35); transform: scale(0); opacity: 0;
+}
+.play .popout-link::before { animation: halo 2.4s ease-out 2.05s infinite; }
+@keyframes halo { 0% { transform: scale(.4); opacity: .9; } 70%, 100% { transform: scale(1.8); opacity: 0; } }
+
+/* Popout panel: a red bar draws across its top edge. */
+.popout::before {
+  content: ''; position: absolute; left: 0; top: 0; width: 100%; height: 8px; z-index: 6; background: var(--stripe);
+  transform: scaleX(0); transform-origin: left; transition: transform .7s var(--ease) .35s;
+}
+.popout-layer.open .popout::before { transform: none; }
+.popout-switch {
+  position: absolute; top: 50%; z-index: 5; width: 64px; height: 64px; margin-top: -32px; border-radius: 50%;
+  font: 300 44px/58px var(--head); color: #fff; background: rgba(0, 0, 0, .55); transition: background .2s;
+}
+.popout-switch:hover { background: var(--red); }
+.popout-switch.to-prev { left: -96px; }
+.popout-switch.to-next { right: -96px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .wipe { display: none; }
+  .photo-wrap, .card::before, .popout::before { transition: none !important; }
+  .popout-link::before { animation: none !important; }
+}
