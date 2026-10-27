@@ -4,14 +4,14 @@
   const stage = document.getElementById('stage');
   const slides = [...stage.querySelectorAll(':scope > .slide')];
   const layer = stage.querySelector('.popout-layer');
-  const viewport = document.getElementById('viewport');
-  const bar = document.querySelector('.menubar');
-  const count = bar.querySelector('.count');
+  const nav = document.querySelector('.deck-nav');
+  const dots = nav.querySelector('.dots');
+  const count = nav.querySelector('.count');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Fit the 1920×1080 stage to the space under the menu bar.
+  // Fit the 1920×1080 stage to the window.
   const fit = () => {
-    const s = Math.min(viewport.clientWidth / 1920, viewport.clientHeight / 1080);
+    const s = Math.min(innerWidth / 1920, innerHeight / 1080);
     stage.style.setProperty('--scale', s);
     stage.dataset.scale = s;
   };
@@ -59,6 +59,14 @@
   // Slides -------------------------------------------------------------------
   let index = -1, stopTimer;
 
+  slides.forEach((s, i) => {
+    const b = document.createElement('button');
+    b.setAttribute('aria-label', `${i + 1}. ${s.dataset.title}`);
+    b.title = s.dataset.title;
+    b.addEventListener('click', () => go(i));
+    dots.append(b);
+  });
+
   const wipe = stage.querySelector('.wipe');
   const progress = stage.querySelector('.progress');
   let wipeSwap, wipeEnd;
@@ -79,7 +87,6 @@
     wipeSwap = setTimeout(() => show(target, opts), 380);
     wipeEnd = setTimeout(() => wipe.classList.remove('go', 'back'), 950);
     pending = target;
-    markMenu();
   }
   let pending = -1;
 
@@ -97,10 +104,10 @@
     const s = slides[i];
     s.classList.add('current');
     play(s);
+    [...dots.children].forEach((d, n) => d.setAttribute('aria-current', n === i));
     count.textContent = `${i + 1} / ${slides.length}`;
     progress.style.setProperty('--p', (i + 1) / slides.length);
     if (!fromHash) history.replaceState(null, '', '#' + s.id);
-    markMenu();
   }
   const cur = () => (pending >= 0 ? pending : index);
   const next = () => (openPopoutEl ? null : go(cur() + 1));
@@ -131,7 +138,6 @@
     if (pop.id === 'development') runContinuum(pop);
     pop.querySelector('.popout-close').focus({ preventScroll: true });
     history.replaceState(null, '', '#' + id);
-    markMenu();
   }
 
   function closePopout(instant) {
@@ -150,7 +156,6 @@
       history.replaceState(null, '', '#' + slides[index].id);
       opener?.focus({ preventScroll: true });
     }
-    markMenu();
   }
 
   stage.querySelectorAll('[data-popout]').forEach((b) =>
@@ -170,7 +175,6 @@
     if (id === 'development') runContinuum(pop);
     pop.querySelector('.popout-close').focus({ preventScroll: true });
     history.replaceState(null, '', '#' + id);
-    markMenu();
   };
   layer.querySelectorAll('[data-popout-to]').forEach((b) => b.addEventListener('click', () => switchPopout(b.dataset.popoutTo)));
   const otherPopout = () => [...layer.querySelectorAll('.popout')].find((p) => p !== openPopoutEl)?.id;
@@ -238,42 +242,9 @@
     }
   });
 
-  // Menu bar ----------------------------------------------------------------
-  const menuItems = bar.querySelector('.mb-items');
-  const toggle = bar.querySelector('.mb-toggle');
-  const setMenuOpen = (open) => {
-    menuItems.classList.toggle('open', open);
-    toggle.setAttribute('aria-expanded', open);
-  };
-  toggle.addEventListener('click', () => setMenuOpen(!menuItems.classList.contains('open')));
-
-  bar.querySelectorAll('[data-go]').forEach((b) => b.addEventListener('click', () => {
-    setMenuOpen(false);
-    closePopout(true);
-    go(slides.findIndex((s) => s.id === b.dataset.go));
-    b.blur();
-  }));
-  bar.querySelectorAll('[data-pop]').forEach((b) => b.addEventListener('click', () => {
-    setMenuOpen(false);
-    b.blur();
-    if (openPopoutEl) return switchPopout(b.dataset.pop);
-    openPopout(b.dataset.pop, stage.querySelector(`[data-popout="${b.dataset.pop}"]`));
-  }));
-
-  // Underline the current slide, or the open popout under About Stream.
-  function markMenu() {
-    const id = slides[pending >= 0 ? pending : index]?.id;
-    bar.querySelectorAll('[data-go]').forEach((b) => b.toggleAttribute('aria-current', b.dataset.go === id));
-    bar.querySelectorAll('[data-pop]').forEach((b) => b.toggleAttribute('aria-current', b.dataset.pop === openPopoutEl?.id));
-  }
-
-  bar.querySelector('.next').addEventListener('click', next);
-  bar.querySelector('.prev').addEventListener('click', prev);
-  bar.querySelector('.fs').addEventListener('click', toggleFullscreen);
-  document.addEventListener('fullscreenchange', () => {
-    document.body.classList.toggle('fs', !!document.fullscreenElement);
-    fit();
-  });
+  nav.querySelector('.next').addEventListener('click', next);
+  nav.querySelector('.prev').addEventListener('click', prev);
+  nav.querySelector('.fs').addEventListener('click', toggleFullscreen);
   function toggleFullscreen() {
     if (document.fullscreenElement) document.exitFullscreen?.();
     else document.documentElement.requestFullscreen?.().catch(() => {});
@@ -298,10 +269,12 @@
     });
   });
 
-  // In full screen the menu bar tucks away; bring it back when the pointer
-  // nears the top edge.
-  addEventListener('mousemove', (e) => {
-    document.body.classList.toggle('show-bar', e.clientY < 64 || bar.contains(e.target));
+  // Show the slide controls while the mouse moves, hide them when it rests.
+  let idle;
+  addEventListener('mousemove', () => {
+    document.body.classList.add('show-nav');
+    clearTimeout(idle);
+    idle = setTimeout(() => document.body.classList.remove('show-nav'), 2200);
   });
 
   // Deep links: #slide-id, or a popout id to open it over About Stream.
