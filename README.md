@@ -38,10 +38,10 @@ Each slide and popout has its own link, e.g. `…/#about-stream` or
 
 ## Hosting on Netlify
 
-Create a new site from this repository and set **Base directory** to
-`vista-trans`. Netlify picks up `vista-trans/netlify.toml` (no build, publish
-the folder as-is). Leave the existing 357 Green site alone; it builds from the
-repo root.
+In Netlify choose **Add new site → Import an existing project → GitHub**,
+pick this repository, and leave the build settings empty (no build command,
+publish directory `.`; `netlify.toml` already says so). Every push to
+`main` then redeploys the site.
 
 ## One-file version
 
