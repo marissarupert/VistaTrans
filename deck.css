@@ -105,8 +105,8 @@ img { display: block; }
   content: ''; position: absolute; left: -9px; top: -9px; width: 18px; height: 18px;
   border-radius: 50%; border: 2px solid var(--red); opacity: 0;
 }
-.play .pin::before { animation: ping 2.8s ease-out var(--d) infinite; }
-.play .pin::after { animation: ping 2.8s ease-out calc(var(--d) + 1.4s) infinite; }
+/* One ring per pin as the slide opens, then the map stays still. */
+.play .pin::before { animation: ping 1.6s ease-out var(--d) forwards; }
 @keyframes ping { 0% { transform: scale(.6); opacity: .9; } 100% { transform: scale(2.6); opacity: 0; } }
 
 .stat-row .stat { position: absolute; top: 928px; transform: translate(-50%, 26px); text-align: center; }
@@ -126,7 +126,7 @@ img { display: block; }
   position: absolute; left: -32px; top: 6px; width: 27px; height: 31px; overflow: visible;
   transform-origin: 60% 80%;
 }
-.play .popout-link .hand { animation: tap 2.4s ease-in-out 2s infinite; }
+.play .popout-link .hand { animation: tap 2.4s ease-in-out 2s; }
 @keyframes tap { 0%, 60%, 100% { transform: none; } 70% { transform: translate(2px, 2px) scale(.92); } 80% { transform: none; } }
 .popout-link .ul {
   position: absolute; left: 0; right: 0; bottom: 1px; height: 4px; background: #ff0000;
@@ -378,7 +378,7 @@ body.show-nav .deck-nav, .deck-nav:hover, .deck-nav:focus-within { opacity: 1; }
   content: ''; position: absolute; left: -36px; top: 7px; width: 30px; height: 30px; border-radius: 50%;
   background: rgba(255, 0, 0, .35); transform: scale(0); opacity: 0;
 }
-.play .popout-link::before { animation: halo 2.4s ease-out 2.05s infinite; }
+.play .popout-link::before { animation: halo 2.4s ease-out 2.05s; }
 @keyframes halo { 0% { transform: scale(.4); opacity: .9; } 70%, 100% { transform: scale(1.8); opacity: 0; } }
 
 /* Popout panel: a red bar draws across its top edge. */
