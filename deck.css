@@ -169,12 +169,6 @@ img { display: block; }
   position: absolute; left: 0; bottom: 0; padding: 9px 16px 8px; background: var(--red); color: #fff;
   font: 700 15px/18px var(--head); letter-spacing: .06em; text-transform: uppercase; white-space: nowrap;
 }
-/* Until a photo is supplied: a charcoal panel with the deck's red stripe. */
-.bp-ph { position: absolute; inset: 0; display: grid; place-items: center;
-  background: linear-gradient(105deg, transparent 72%, var(--stripe) 72% 74%, transparent 74%), var(--charcoal); }
-.bp-ph svg { width: 92px; height: 92px; margin-top: -18px; fill: none; stroke: rgba(255, 255, 255, .55); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; transition: stroke .3s, transform .5s var(--ease); }
-.bp-photo:hover .bp-ph svg { stroke: #fff; transform: translateY(-4px); }
-
 .bp-addr { padding-top: 16px; }
 .bp-addr b { display: block; font: 700 25px/30px var(--head); letter-spacing: -.005em; color: #000; white-space: nowrap; }
 .bp-addr span { display: block; margin-top: 4px; font: 400 18px/23px var(--body); color: #58595b; }
