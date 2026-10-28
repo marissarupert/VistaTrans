@@ -13,7 +13,7 @@ build step and no dependencies.
 4. Understanding Your Business: VistaTrans building profiles (Huntley,
    Grapevine, Norcross, Etobicoke). The table shows only the facts
    highlighted in `Vista_Trans_Building_Profiles_Updated.docx`, under a
-   photo of each building (`assets/img/huntley-aerial.jpg`, `grapevine.jpg`,
+   photo of each building (`assets/img/huntley.jpg`, `grapevine.jpg`,
    `norcross.jpg`, `etobicoke.jpg`; drop a new file over one to replace it).
 5. Capital Structure Flexibility
 6. Thank You (phone numbers and emails are live links)
