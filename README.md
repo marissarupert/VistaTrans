@@ -10,7 +10,12 @@ build step and no dependencies.
 2. Logistics Specialists (team and clients)
 3. Your Real Estate Partner: **Investment Management** and **Development** in
    the service list open as popouts
-4. Understanding Your Business
+4. Understanding Your Business: VistaTrans building profiles (Huntley,
+   Grapevine, Norcross, Etobicoke). The table shows only the facts
+   highlighted in `Vista_Trans_Building_Profiles_Updated.docx`. Grapevine,
+   Norcross and Etobicoke show a charcoal panel until photos are supplied:
+   put each image in `assets/img/` and swap the `bp-ph` panel in its
+   `bp-photo` figure in `index.html` for an `<img>`, as Huntley does.
 5. Capital Structure Flexibility
 6. Thank You (phone numbers and emails are live links)
 

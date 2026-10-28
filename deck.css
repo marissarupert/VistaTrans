@@ -140,13 +140,58 @@ img { display: block; }
 
 /* 4 · Understanding your business ------------------------------------------- */
 
-.placeholder {
-  position: absolute; left: 362px; top: 384px; width: 1172px; height: 387px; background: #e840db;
+/* Building profiles: four columns, photo on top, facts in rows. */
+.bp {
+  position: absolute; left: 65px; top: 168px; width: 1790px; height: 880px;
+  display: grid; grid-template-columns: 196px repeat(4, 1fr); column-gap: 26px;
+  grid-template-rows: 214px 92px repeat(9, 1fr);
 }
-.placeholder span {
-  position: absolute; left: 99px; top: 146px; white-space: nowrap;
-  font: 400 56px/65px 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #fff;
+.bp-colbg {
+  margin: -12px -13px 0; background: #fff; border-top: 5px solid transparent;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0); transition: border-color .3s, box-shadow .3s;
 }
+.bp[data-hc="0"] .bp-colbg[data-col="0"], .bp[data-hc="1"] .bp-colbg[data-col="1"],
+.bp[data-hc="2"] .bp-colbg[data-col="2"], .bp[data-hc="3"] .bp-colbg[data-col="3"] {
+  border-top-color: var(--stripe); box-shadow: 0 18px 40px rgba(26, 22, 20, .12);
+}
+.bp-rowbg { grid-column: 1 / -1; border-top: 1px solid #e4dfda; transition: background .25s; position: relative; z-index: 1; }
+.bp[data-hr="0"] .bp-rowbg[data-row="0"], .bp[data-hr="1"] .bp-rowbg[data-row="1"], .bp[data-hr="2"] .bp-rowbg[data-row="2"],
+.bp[data-hr="3"] .bp-rowbg[data-row="3"], .bp[data-hr="4"] .bp-rowbg[data-row="4"], .bp[data-hr="5"] .bp-rowbg[data-row="5"],
+.bp[data-hr="6"] .bp-rowbg[data-row="6"], .bp[data-hr="7"] .bp-rowbg[data-row="7"], .bp[data-hr="8"] .bp-rowbg[data-row="8"] {
+  background: rgba(237, 30, 36, .05);
+}
+.bp-photo, .bp-addr, .bp-label, .bp-cell { position: relative; z-index: 2; }
+
+.bp-photo { overflow: hidden; background: var(--charcoal); }
+.bp-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease); }
+.bp-photo:hover img { transform: scale(1.06); }
+.bp-photo figcaption {
+  position: absolute; left: 0; bottom: 0; padding: 9px 16px 8px; background: var(--red); color: #fff;
+  font: 700 15px/18px var(--head); letter-spacing: .06em; text-transform: uppercase; white-space: nowrap;
+}
+/* Until a photo is supplied: a charcoal panel with the deck's red stripe. */
+.bp-ph { position: absolute; inset: 0; display: grid; place-items: center;
+  background: linear-gradient(105deg, transparent 72%, var(--stripe) 72% 74%, transparent 74%), var(--charcoal); }
+.bp-ph svg { width: 92px; height: 92px; margin-top: -18px; fill: none; stroke: rgba(255, 255, 255, .55); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; transition: stroke .3s, transform .5s var(--ease); }
+.bp-photo:hover .bp-ph svg { stroke: #fff; transform: translateY(-4px); }
+
+.bp-addr { padding-top: 16px; }
+.bp-addr b { display: block; font: 700 25px/30px var(--head); letter-spacing: -.005em; color: #000; white-space: nowrap; }
+.bp-addr span { display: block; margin-top: 4px; font: 400 18px/23px var(--body); color: #58595b; }
+
+.bp-label { grid-column: 1;
+  display: flex; align-items: center; padding-right: 10px;
+  font: 700 14px/18px var(--head); letter-spacing: .07em; text-transform: uppercase; color: #8e8e8e;
+}
+.bp-cell { display: flex; flex-direction: column; justify-content: center; font: 600 19px/23px var(--body); color: #1a1614; }
+.bp-cell strong { font: 700 24px/28px var(--head); letter-spacing: -.005em; color: #000; }
+.bp-cell small { margin-top: 2px; font: 600 17px/21px var(--body); color: var(--red); }
+.bp-none { color: #c4beb8; }
+.bp-own {
+  align-self: flex-start; padding: 5px 14px 4px; border: 2px solid #1a1614; border-radius: 999px;
+  font: 700 15px/18px var(--head); letter-spacing: .06em; text-transform: uppercase;
+}
+.bp-own.is-owned { background: var(--red); border-color: var(--red); color: #fff; }
 
 /* 5 · Capital structure ------------------------------------------------------ */
 

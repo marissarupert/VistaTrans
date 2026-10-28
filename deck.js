@@ -222,6 +222,16 @@
     });
   });
 
+  // Building profiles: light up the column and row under the pointer.
+  stage.querySelectorAll('.bp').forEach((bp) => {
+    bp.addEventListener('mouseover', (e) => {
+      const el = e.target.closest('[data-col], [data-row]');
+      bp.dataset.hc = el?.dataset.col ?? '';
+      bp.dataset.hr = el?.dataset.row ?? '';
+    });
+    bp.addEventListener('mouseleave', () => { bp.dataset.hc = ''; bp.dataset.hr = ''; });
+  });
+
   // Input -------------------------------------------------------------------
   addEventListener('keydown', (e) => {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
