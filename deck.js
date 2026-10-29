@@ -222,14 +222,18 @@
     });
   });
 
-  // Building profiles: light up the column and row under the pointer.
-  stage.querySelectorAll('.bp').forEach((bp) => {
-    bp.addEventListener('mouseover', (e) => {
-      const el = e.target.closest('[data-col], [data-row]');
-      bp.dataset.hc = el?.dataset.col ?? '';
-      bp.dataset.hr = el?.dataset.row ?? '';
+  // Locations: pointing at a card or a pin picks out that site in both.
+  stage.querySelectorAll('.locations').forEach((wrap) => {
+    const set = (id) => {
+      wrap.classList.toggle('picking', !!id);
+      wrap.querySelectorAll('[data-loc]').forEach((el) => el.classList.toggle('on', el.dataset.loc === id));
+    };
+    wrap.querySelectorAll('[data-loc]').forEach((el) => {
+      el.addEventListener('mouseenter', () => set(el.dataset.loc));
+      el.addEventListener('mouseleave', () => set(null));
+      el.addEventListener('focus', () => set(el.dataset.loc));
+      el.addEventListener('blur', () => set(null));
     });
-    bp.addEventListener('mouseleave', () => { bp.dataset.hc = ''; bp.dataset.hr = ''; });
   });
 
   // Input -------------------------------------------------------------------

@@ -10,11 +10,13 @@ build step and no dependencies.
 2. Logistics Specialists (team and clients)
 3. Your Real Estate Partner: **Investment Management** and **Development** in
    the service list open as popouts
-4. Understanding Your Business: VistaTrans building profiles (Huntley,
-   Grapevine, Norcross, Etobicoke). The table shows only the facts
-   highlighted in `Vista_Trans_Building_Profiles_Updated.docx`, under a
-   photo of each building (`assets/img/huntley.jpg`, `grapevine.jpg`,
-   `norcross.jpg`, `etobicoke.jpg`; drop a new file over one to replace it).
+4. Understanding Your Business: a map of VistaTrans's four locations
+   (numbered pins) beside a card for each one (photo, address, building size
+   and acreage, owned or leased with the landlord), and the company timeline
+   2011 to 2026 along the bottom. Pointing at a card or pin picks out that
+   site in both. The base map is `assets/img/locations-map.svg`, drawn by
+   `tools/build_map.py` from Natural Earth data; the script prints each
+   pin's position.
 5. Capital Structure Flexibility
 6. Thank You (phone numbers and emails are live links)
 
