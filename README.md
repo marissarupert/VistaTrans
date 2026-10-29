@@ -45,6 +45,19 @@ pick this repository, and leave the build settings empty (no build command,
 publish directory `.`; `netlify.toml` already says so). Every push to
 `main` then redeploys the site.
 
+## PDF version
+
+`VistaTrans-Stream.pdf` is a static copy of the deck: eight 1920×1080
+pages in the original order, with the Investment Management and
+Development popouts as pages 4 and 5. Text is selectable and the contact
+links work. It is published with the site at `/VistaTrans-Stream.pdf`.
+After changing a slide, rebuild it:
+
+```sh
+python3 -m http.server 8766 &
+node tools/build_pdf.js        # needs Playwright and pdfunite (poppler)
+```
+
 ## One-file version
 
 ```sh
